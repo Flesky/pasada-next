@@ -245,12 +245,12 @@ const healthFields: FormFields = {
     label: 'Smoker',
     options: [
       {
-        label: 'Positive',
-        value: 'Smoker',
-      },
-      {
         label: 'Negative',
         value: 'Non-Smoker',
+      },
+      {
+        label: 'Positive',
+        value: 'Smoker',
       },
     ],
     span: 8,
