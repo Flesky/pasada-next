@@ -405,6 +405,24 @@ const rules: FormRules = Object.entries({
   zip_code: {
     required: true,
   },
+  work_hours_range: {
+    validator: (_, value) => value < 25 || new Error('Please enter a valid number'),
+  },
+  sleep_hours_range: {
+    validator: (_, value) => value < 25 || new Error('Please enter a valid number'),
+  },
+  health_status: {
+    required: true,
+  },
+  drug_test: {
+    required: true,
+  },
+  alcohol_test: {
+    required: true,
+  },
+  smoker: {
+    required: true,
+  },
   license_registration: {
     required: true,
     validator: (_, value) => {
