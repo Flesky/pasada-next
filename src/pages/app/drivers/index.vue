@@ -95,7 +95,6 @@ const rules: FormRules = {
     },
   },
   mobile_number: {
-    type: 'input',
     required: true,
     validator: (_, value) => /^639\d{9}$/.test(value) || new Error('Invalid format'),
   },
@@ -108,6 +107,7 @@ const rules: FormRules = {
 const queries: Queries = {
   all: 'userManagement',
   get: 'getAllUsers',
+  // getAllUsersOrganization
   organization: 'getVerifiedMembersByOrg',
   hasOrganizationField: true,
   delete: false,

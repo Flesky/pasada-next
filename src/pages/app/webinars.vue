@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import type { DataTableColumns, FormRules } from 'naive-ui'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { NTag } from 'naive-ui'
 import type { FormFields, Queries } from '@/types'
 import ViewImage from '@/components/button/view-image.vue'
 import formState from '@/utils/formState'
@@ -20,6 +21,17 @@ const columns: DataTableColumns = [
   {
     title: 'Link',
     key: 'web_link',
+    sorter: 'default',
+  },
+  {
+    title: 'Status',
+    key: 'status',
+    render(row) {
+      return <NTag type={{
+        Inactive: 'warning',
+        Active: 'success',
+      }[row.status as string] as 'success' | 'warning'}>{row.status}</NTag>
+    },
     sorter: 'default',
   },
   {

@@ -77,11 +77,10 @@ const rules: FormRules = {
 
 const queries: Queries = {
   all: 'incentiveReward',
-  organization: 'incentiveRewardOrganization',
-  hasOrganizationField: true,
+  get: 'incentiveRewardsByIncentiveID',
 }
 </script>
 
 <template>
-  <table-crud v-bind="{ columns, fields, rules, queries }" name="reward" />
+  <table-crud v-bind="{ columns, fields, rules, queries }" name="reward" foreign-key="is_id" />
 </template>

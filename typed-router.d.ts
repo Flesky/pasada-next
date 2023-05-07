@@ -48,7 +48,7 @@ declare module 'vue-router/auto/routes' {
     'Drivers': RouteRecordInfo<'Drivers', '/app/drivers', Record<never, never>, Record<never, never>>,
     'Profile': RouteRecordInfo<'Profile', '/drivers/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'Incentives': RouteRecordInfo<'Incentives', '/app/incentives', Record<never, never>, Record<never, never>>,
-    'Incentives old': RouteRecordInfo<'Incentives old', '/app/incentives old', Record<never, never>, Record<never, never>>,
+    '/app/incentives new': RouteRecordInfo<'/app/incentives new', '/app/incentives new', Record<never, never>, Record<never, never>>,
     'Lessons': RouteRecordInfo<'Lessons', '/app/lessons', Record<never, never>, Record<never, never>>,
     'Members': RouteRecordInfo<'Members', '/app/members', Record<never, never>, Record<never, never>>,
     'Modules': RouteRecordInfo<'Modules', '/app/modules', Record<never, never>, Record<never, never>>,

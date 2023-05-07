@@ -33,13 +33,13 @@ export default defineComponent({
             case 'date':
               return <NDatePicker v-model:formatted-value={formState.value[key]} type="date" value-format="yyyy-MM-dd" placeholder={field.placeholder || ''} />
             case 'dropdown':
-              return <FieldDropdown v-model:value={formState.value[key]} options={field.options} placeholder={field.placeholder || ''} />
+              return <FieldDropdown v-model:value={formState.value[key]} clearable options={field.options} placeholder={field.placeholder || ''} />
             case 'file':
               return <FieldFile v-model:value={formState.value[key]} accept={field.accept} />
             case 'input':
               return <NInput v-model:value={formState.value[key]} placeholder={field.placeholder || ''} />
             case 'number':
-              return <FieldNumber v-model:value={formState.value[key]} placeholder={field.placeholder || ''} suffix={field.suffix}></FieldNumber>
+              return <FieldNumber v-model:value={formState.value[key]} placeholder={field.placeholder || ''} suffix={field.suffix} min={0}></FieldNumber>
             case 'password':
               return <NInput v-model:value={formState.value[key]} type="password" placeholder={field.placeholder || ''} />
             case 'quill':

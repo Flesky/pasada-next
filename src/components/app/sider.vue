@@ -262,6 +262,29 @@ async function useZxcvbn() {
 watchDebounced(newPassword, () => {
   useZxcvbn()
 }, { debounce: 300, maxWait: 2000 })
+
+const { loading: passwordLoading, run: passwordRun } = useRequest(
+  () => {
+    const data = {
+      email: auth.user?.email,
+      current_password: oldPassword.value,
+      new_password: newPassword.value,
+      new_password_confirmation: newPassword.value,
+    }
+    const formData = new FormData()
+    Object.entries(data).forEach(([key, value]) => {
+      value ??= ''
+      formData.append(key, value as string)
+    })
+    return axios.post('/password/change', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+  }, {
+    manual: true,
+    onSuccess: () => {
+      message.success('Changed password')
+      window.location.reload()
+    },
+  },
+)
 </script>
 
 <template>
@@ -342,7 +365,7 @@ watchDebounced(newPassword, () => {
           <NButton round @click="modal = false">
             Cancel
           </NButton>
-          <NButton round :disabled="passwordScore >= 3" type="primary" :loading="postLoading" @click="handlePost()">
+          <NButton round :disabled="currentTab === 'password' && passwordScore < 3" type="primary" :loading="postLoading || passwordLoading" @click="currentTab === 'password' ? passwordRun() : handlePost()">
             Save
           </NButton>
         </NSpace>
