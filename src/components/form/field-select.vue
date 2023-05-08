@@ -23,7 +23,7 @@ const { data, loading } = useRequest(async () => {
 })
 
 const filteredData = computed(() => {
-  if (props.queries.organization && auth.isSuperadmin) {
+  if (props.queries.organization && auth.isSuperadmin && formState.value.organization_id !== 1) {
     const filtered = data.value?.filter((item: {
       organization_id: number
     }) => item.organization_id === formState.value.organization_id)
