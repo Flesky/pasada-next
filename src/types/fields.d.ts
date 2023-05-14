@@ -59,6 +59,7 @@ interface FieldSelect extends FieldItem {
     organization?: string
   }
   format: (object: Record<string, string>) => string
+  organization_id?: number
 }
 
 interface FieldSelectUser extends FieldItem {
@@ -67,6 +68,7 @@ interface FieldSelectUser extends FieldItem {
     all: string
     organization?: string
   }
+  organization_id?: number
 }
 
 interface FieldTextarea extends FieldItem {

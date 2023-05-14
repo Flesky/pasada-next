@@ -17,10 +17,6 @@ const attachments = reactive({
 
 const columns: DataTableColumns = [
   {
-    title: 'id',
-    key: 'id',
-  },
-  {
     title: 'Driver',
     key: 'name',
     render(row) {
@@ -188,6 +184,7 @@ const rules: FormRules = {
 const queries: Queries = {
   all: 'violation',
   organization: 'violationsOrganizations',
+  hasOrganizationField: true,
 }
 </script>
 

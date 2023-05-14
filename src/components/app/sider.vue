@@ -5,6 +5,7 @@ import { RouterLink } from 'vue-router'
 import { zxcvbn } from '@zxcvbn-ts/core'
 import Dashboard from '~icons/ion/SpeedometerOutline'
 import Analytics from '~icons/ion/AnalyticsOutline'
+import IOT from '~icons/ion/NavigateCircleOutline'
 import Learning from '~icons/ion/SchoolOutline'
 import Modules from '~icons/ion/BookOutline'
 import Lessons from '~icons/ion/DocumentTextOutline'
@@ -48,6 +49,11 @@ const menu: MenuOption[] = [
     label: renderLabel('Analytics', '/analytics'),
     key: 'analytics',
     icon: renderIcon(Analytics),
+  },
+  {
+    label: renderLabel('Realtime Tracking', '/realtime'),
+    key: 'realtime',
+    icon: renderIcon(IOT),
   },
   {
     label: 'Learning Content',
@@ -145,12 +151,16 @@ const menu: MenuOption[] = [
 ]
 
 const fields: FormFields = {
-  organization_id: {
-    type: 'select',
-    label: 'Organization',
-    queries: { all: 'organization' },
-    format: org => org.org_title,
-  },
+  ...auth.isSuperadmin
+    ? {
+        organization_id: {
+          type: 'select',
+          label: 'Organization',
+          queries: { all: 'organization' },
+          format: org => org.org_title,
+        },
+      }
+    : {},
   fname: {
     type: 'input',
     label: 'First name',
@@ -219,7 +229,7 @@ const message = useMessage()
 const modal = ref(false)
 const openModal = () => {
   modal.value = true
-  formState.value = auth.user!
+  formState.value = { ...auth.user! }
 }
 const { loading: postLoading, run: postRun } = useRequest(
   () => {
@@ -293,7 +303,7 @@ const { loading: passwordLoading, run: passwordRun } = useRequest(
     bordered
     show-trigger
     collapse-mode="width" :width="240" :collapsed-width="64"
-    content-style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;"
+    content-style="height: 100%; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;"
     v-bind="{ collapsed: isCollapsed }"
     @collapse="isCollapsed = true"
     @expand="isCollapsed = false"

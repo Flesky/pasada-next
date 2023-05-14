@@ -195,6 +195,7 @@ const fields: FormFields = {
 const rules: FormRules = {
   plate_number: {
     required: true,
+    validator: (_, value) => /^[A-Z]{3}\d{3,4}$/.test(value) || new Error('Invalid plate number'),
   },
   vehicle_type: {
     required: true,
@@ -211,6 +212,7 @@ const rules: FormRules = {
   year_model: {
     type: 'number',
     required: true,
+    validator: (_, value) => (value >= 1900 && value <= new Date().getFullYear() + 1) || new Error('Invalid year model'),
   },
   model_name: {
     required: true,
@@ -218,6 +220,7 @@ const rules: FormRules = {
   year_of_registration: {
     type: 'number',
     required: true,
+    validator: (_, value) => (value >= 1900 && value <= new Date().getFullYear()) || new Error('Invalid year model'),
   },
   month_of_registration: {
     type: 'number',

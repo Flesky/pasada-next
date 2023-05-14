@@ -54,6 +54,7 @@ declare module 'vue-router/auto/routes' {
     'Modules': RouteRecordInfo<'Modules', '/app/modules', Record<never, never>, Record<never, never>>,
     'Organizations': RouteRecordInfo<'Organizations', '/app/organizations', Record<never, never>, Record<never, never>>,
     'Quizzes': RouteRecordInfo<'Quizzes', '/app/quizzes', Record<never, never>, Record<never, never>>,
+    'Realtime Tracking': RouteRecordInfo<'Realtime Tracking', '/app/realtime', Record<never, never>, Record<never, never>>,
     'Reminders': RouteRecordInfo<'Reminders', '/app/reminders', Record<never, never>, Record<never, never>>,
     'Summary': RouteRecordInfo<'Summary', '/app/summary', Record<never, never>, Record<never, never>>,
     'Vehicles': RouteRecordInfo<'Vehicles', '/app/vehicles', Record<never, never>, Record<never, never>>,

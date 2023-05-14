@@ -30,12 +30,13 @@ const { data, loading, error, run } = useRequest(async () => {
     ]
   }
   const dashboard = await Promise.all([
-    axios.get('/getDashboardInfo'),
-    // axios.get(auth.isSuperadmin ? '/getDashboardInfo' : '/getDashboardInfoByOrg/' + auth.user.organization_id)
+    // axios.get('/getDashboardInfo'),
+    axios.get(auth.isSuperadmin ? '/getDashboardInfo' : `/getDashboardInfoByOrg/${auth.user?.organization_id}`),
     axios.get('/getAllSetbacks'),
     axios.get(auth.isSuperadmin ? '/getQuizPassFail' : '/getQuizPassFailOrganization'),
     axios.get(auth.isSuperadmin ? '/quizScore' : '/quizScoreOrganization'),
     ...graphQueries,
+    axios.get(auth.isSuperadmin ? '/getRecentVehicles' : '/getRecentVehiclesOrg'),
   ])
 
   const time = dayjs()
@@ -47,10 +48,12 @@ const { data, loading, error, run } = useRequest(async () => {
   else if (hour >= 12 && hour < 18)
     greeting = 'Good afternoon'
 
+  console.log(dashboard)
+
   graphData.value = {
-    complaints: dashboard[4].data.results,
-    accidents: dashboard[5].data.results,
-    violations: dashboard[6].data.results,
+    complaints: dashboard[5].data.results,
+    accidents: dashboard[6].data.results,
+    violations: dashboard[7].data.results,
   }
 
   return {
@@ -60,6 +63,7 @@ const { data, loading, error, run } = useRequest(async () => {
     setbacks: dashboard[1].data.results,
     passingRate: dashboard[2].data.results,
     quizScores: dashboard[3].data.results,
+    recentVehicles: dashboard[4].data.results,
   }
 })
 const { isPending, start, stop } = useTimeoutFn(() => {
@@ -112,7 +116,9 @@ const quizScoreColumns: DataTableColumns = [
   {
     title: 'Driver',
     key: 'name',
-    sorter: 'default',
+    sorter(rowA, rowB) {
+      return (`${rowA.fname} ${rowA.lname}`).localeCompare(`${rowB.fname} ${rowB.lname}`)
+    },
     render(row) {
       return <TableFieldUser id={row.user_id} fname={row.fname} lname={row.lname} user_image={row.user_image}></TableFieldUser>
     },
@@ -150,6 +156,32 @@ const quizScoreColumns: DataTableColumns = [
           passed: 'Passed',
         }[evaluation]}</NTag>
       </div>
+    },
+  },
+  {
+    title: 'Date',
+    key: 'created_at',
+    sorter: 'default',
+    render(row) {
+      return (row.created_at as string).slice(0, 10)
+    },
+  },
+]
+
+const recentVehiclesColumns: DataTableColumns = [
+  {
+    title: 'Vehicle',
+    key: 'vehicle_information.vehicle_plate_number',
+    sorter: 'default',
+  },
+  {
+    title: 'Driver',
+    key: 'driver_information.fname',
+    sorter(rowA, rowB) {
+      return (`${rowA.fname} ${rowA.lname}`).localeCompare(`${rowB.fname} ${rowB.lname}`)
+    },
+    render(row) {
+      return <TableFieldUser id={row.user.id} fname={row.user.fname} lname={row.user.lname} user_image={row.user.user_image}></TableFieldUser>
     },
   },
   {
@@ -254,21 +286,10 @@ const quizScoreColumns: DataTableColumns = [
     <table-base
       :data="data.quizScores" :columns="quizScoreColumns"
     />
+
+    <n-h2>Recently active vehicles</n-h2>
+    <table-base
+      :data="[]" :columns="recentVehiclesColumns"
+    />
   </div>
 </template>
-
-<!-- <style> -->
-<!--  .test:hover{ -->
-<!--    background-color: #3D53A4; -->
-<!--    transition-duration: 0.4s; -->
-<!--    color:white; -->
-<!--  } -->
-<!--  .test:hover a{ -->
-<!--    color:white; -->
-<!--    valueTextColor:white; -->
-<!--  } -->
-
-<!--  n-statistic:hover{ -->
-<!--    valueTextColor:white; -->
-<!--  } -->
-<!-- </style> -->

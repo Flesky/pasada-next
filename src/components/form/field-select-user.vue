@@ -7,6 +7,8 @@ import {
   NAvatar,
   NText,
 } from 'naive-ui'
+import { useAuth } from '@/utils/auth'
+import formState from '@/utils/formState'
 
 const props = defineProps<{
   query: string
@@ -19,11 +21,30 @@ const { data, loading } = useRequest(async () => {
   const results = await axios.get(`/${props.query}`)
   return results.data.results.map(item => ({
     label: (item.fname ? `${item.fname} ${item.lname}` : `${item.fname} ${item.lname}`) + item.email,
+    organization_id: item.organization_id,
     value: item.id,
     name: item.fname ? `${item.fname} ${item.lname}` : `${item.fname} ${item.lname}`,
     email: item.email,
     image: `${import.meta.env.VITE_BACKEND_URL}/api/fileUserImage/${item.user_image}`,
   }))
+})
+
+const auth = useAuth()
+const filteredData = computed(() => {
+  if (auth.isSuperadmin) {
+    const filtered = data.value?.filter((item: {
+      organization_id: number
+    }) => item.organization_id === formState.value.organization_id)
+    return filtered || []
+  }
+  else {
+    return data.value
+  }
+})
+
+watch(filteredData, () => {
+  if (auth.isSuperadmin)
+    model.value = null
 })
 
 const renderSingleSelectTag: SelectRenderTag = ({ option }) => {
@@ -95,5 +116,5 @@ const renderLabel: SelectRenderLabel = (option) => {
 </script>
 
 <template>
-  <n-select v-model:value="model" filterable :options="data" :disabled="loading" :render-label="renderLabel" :render-tag="renderSingleSelectTag" />
+  <n-select v-model:value="model" clearable filterable :options="filteredData" :disabled="loading" :render-label="renderLabel" :render-tag="renderSingleSelectTag" />
 </template>

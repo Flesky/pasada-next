@@ -13,7 +13,7 @@ definePage({
   >
     <app-sider />
     <n-layout class="h-full">
-      <n-layout-header class="sticky top-0 z-50 flex h-16 justify-between">
+      <n-layout-header v-if="$route.name !== 'Analytics'" class="sticky top-0 z-50 flex h-16 justify-between">
         <div style="background: linear-gradient(128deg, rgba(61,83,164,1) 80%, rgba(250,250,250,255) 90%);" class="flex h-full grow items-center bg-none px-4">
           <n-h2 class="!mb-0 !text-white">
             {{ $route.name }}

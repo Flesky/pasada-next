@@ -38,10 +38,13 @@ const columns: DataTableColumns = [
     title: 'Schedule',
     key: 'web_start_date',
     render(row) {
-      if (row.web_start_date === row.web_end_date)
-        return <div>{row.web_start_date} {dayjs(row.web_start_time, 'HH:mm:ss').format('h:mm A')} - {dayjs(row.web_end_time, 'HH:mm:ss').format('h:mm A')}</div>
+      const startDate = dayjs(row.web_start_date).format('MM-DD-YYYY')
+      const endDate = dayjs(row.web_end_date).format('MM-DD-YYYY')
 
-      else return <div>{row.web_start_date} {dayjs(row.web_start_time, 'HH:mm:ss').format('h:mm A')} - {row.web_end_date} {dayjs(row.web_end_time, 'HH:mm:ss').format('h:mm A')}</div>
+      if (startDate === endDate)
+        return <div>{startDate} {dayjs(row.web_start_time, 'HH:mm:ss').format('h:mm A')} - {dayjs(row.web_end_time, 'HH:mm:ss').format('h:mm A')}</div>
+
+      else return <div>{startDate} {dayjs(row.web_start_time, 'HH:mm:ss').format('h:mm A')} - {endDate} {dayjs(row.web_end_time, 'HH:mm:ss').format('h:mm A')}</div>
     },
   },
   {

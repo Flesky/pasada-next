@@ -82,7 +82,7 @@ const fields: FormFields = {
   complainant: {
     type: 'input',
     label: 'Complainant name',
-    placeholder: 'e.g. "Juan Dela Cruz"',
+    placeholder: 'Leave blank if anonymous',
     span: 12,
   },
   complainant_type: {
@@ -116,13 +116,13 @@ const fields: FormFields = {
   complainant_email: {
     type: 'input',
     label: 'Complainant email',
-    placeholder: 'e.g. "juandelacruz@gmail.com"',
+    placeholder: 'Leave blank if anonymous',
     span: 12,
   },
   complainant_contact_num: {
     type: 'number',
     label: 'Complainant contact number',
-    placeholder: 'e.g. "639123456789"',
+    placeholder: 'e.g. "639123456789" | Leave blank if anonymous',
     span: 12,
   },
   date_happened: {
@@ -178,6 +178,7 @@ const rules: FormRules = {
 const queries: Queries = {
   all: 'complaint',
   organization: 'complaintOrganization',
+  hasOrganizationField: true,
 }
 </script>
 

@@ -58,7 +58,7 @@ export default defineComponent({
             case 'textarea':
               return <NInput v-model:value={formState.value[key]} type="textarea" maxlength="250" show-count placeholder={field.placeholder || ''} />
             case 'time':
-              return <NTimePicker v-model:formatted-value={formState.value[key]} format="h:mm a" value-format="HH:mm:00" placeholder={field.placeholder || ''} />
+              return <NTimePicker v-model:formatted-value={formState.value[key]} format="h:mm a" value-format="HH:mm:ss" placeholder={field.placeholder || ''} />
           }
         }}</NFormItem>
       </div>

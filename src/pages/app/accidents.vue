@@ -262,6 +262,7 @@ const rules: FormRules = {
 const queries: Queries = {
   all: 'accidents',
   organization: 'accidentsOrganization',
+  hasOrganizationField: true,
 }
 </script>
 
