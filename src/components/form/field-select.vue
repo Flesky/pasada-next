@@ -9,7 +9,6 @@ const props = defineProps<{
   }
   value?: number | null
   format: Function
-  organizationId?: number
 }>()
 const emit = defineEmits(['update:value'])
 const model = useVModel(props, 'value', emit)
@@ -24,11 +23,6 @@ const { data, loading } = useRequest(async () => {
 })
 
 const filteredData = computed(() => {
-  if (props?.organizationId) {
-    return data.value?.filter((item: {
-      organization_id: number
-    }) => item.organization_id === props.organizationId)
-  }
   if (props.queries.organization && auth.isSuperadmin && formState.value.organization_id !== 1) {
     const filtered = data.value?.filter((item: {
       organization_id: number
