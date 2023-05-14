@@ -4,6 +4,7 @@ import type { FormFields } from '@/types'
 import { useAuth } from '@/utils/auth'
 import TableFieldUser from '@/components/table/field-user.vue'
 import formState from '@/utils/formState'
+import { validateMessages } from '@/utils/config'
 
 definePage({
   name: 'Realtime Tracking',
@@ -154,7 +155,7 @@ function handlePost(id) {
   <app-error v-if="error" v-bind="{ loading }" @refresh="refresh()" />
 
   <app-modal v-model:show="assign.show" :title="`Assign vehicle: ${assign.plateNumber}`">
-    <n-form ref="formRef" :model="formState" v-bind="{ rules }">
+    <n-form ref="formRef" :model="formState" v-bind="{ rules, validateMessages }">
       <form-master v-bind="{ fields }" />
     </n-form>
     <template #footer>
