@@ -24,7 +24,7 @@ const columns: DataTableColumns = [
   },
   {
     title: 'Plate number',
-    key: 'vehicles.plate_number',
+    key: 'plate_number',
     sorter(rowA: Record<string, any>, rowB: Record<string, any>) {
       return String(rowA.vehicles.plate_number).localeCompare(String(rowB.vehicles.plate_number))
     },

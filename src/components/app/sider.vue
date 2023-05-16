@@ -46,14 +46,14 @@ const menu: MenuOption[] = [
     icon: renderIcon(Dashboard),
   },
   {
-    label: renderLabel('Analytics', '/analytics'),
-    key: 'analytics',
-    icon: renderIcon(Analytics),
-  },
-  {
     label: renderLabel('Realtime Tracking', '/realtime'),
     key: 'realtime',
     icon: renderIcon(IOT),
+  },
+  {
+    label: renderLabel('Analytics', '/analytics'),
+    key: 'analytics',
+    icon: renderIcon(Analytics),
   },
   {
     label: 'Learning Content',

@@ -63,6 +63,11 @@ const activeColumns: DataTableColumns = [
     key: 'plate_number',
   },
   {
+    title: 'Type',
+    key: 'vehicle_type',
+    sorter: 'default',
+  },
+  {
     title: 'Driver',
     key: 'name',
     render(row) {
@@ -99,6 +104,11 @@ const inactiveColumns: DataTableColumns = [
   {
     title: 'Plate number',
     key: 'plate_number',
+  },
+  {
+    title: 'Type',
+    key: 'vehicle_type',
+    sorter: 'default',
   },
   {
     key: 'assign',
@@ -147,10 +157,20 @@ function handlePost(id) {
     Loading...
   </template>
   <template v-if="data">
-    <n-h2>Active vehicles</n-h2>
-    <table-base v-bind="{ data: data.active, columns: activeColumns, loading }" />
-    <n-h2>Inactive vehicles</n-h2>
-    <table-base v-bind="{ data: data.inactive, columns: inactiveColumns }" />
+    <n-card>
+      <n-tabs size="large" type="line">
+        <n-tab-pane tab="Active Vehicles" name="active">
+          <table-base v-bind="{ data: data.active, columns: activeColumns, loading }" />
+        </n-tab-pane>
+        <n-tab-pane tab="Inactive Vehicles" name="inactive">
+          <table-base v-bind="{ data: data.inactive, columns: inactiveColumns }" />
+        </n-tab-pane>
+        <template #suffix>
+          <a href="http://iot.pasadaph.com/trackall" target="_blank">
+            <n-button round type="primary"><template #icon><i-open-outline /></template>Track all vehicles</n-button></a>
+        </template>
+      </n-tabs>
+    </n-card>
   </template>
   <app-error v-if="error" v-bind="{ loading }" @refresh="refresh()" />
 

@@ -1,10 +1,14 @@
 <script setup lang="tsx">
 import type { DataTableColumns } from 'naive-ui'
 import { NTag } from 'naive-ui'
+import { Bar } from 'vue-chartjs'
+import { BarElement, CategoryScale, Chart as ChartJS, Colors, Legend, LinearScale, Title, Tooltip } from 'chart.js'
 
 const props = defineProps<{
   foreignKeyValue: number
 }>()
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, Colors)
 
 const columns: DataTableColumns = [
   {
@@ -41,13 +45,11 @@ const columns: DataTableColumns = [
     title: 'Date',
     key: 'created_at',
     sorter: 'default',
-    render(row) {
-      return <div>{String(row.created_at).slice(0, 10)}</div>
-    },
+    render: row => dayjs(row.created_at).format('MM/DD/YYYY h:mm A'),
   },
 ]
 
-const { data, loading, error } = useRequest(async () => {
+const { data, loading, error, refresh } = useRequest(async () => {
   const res = await axios.get(`getScoreByUserID/${props.foreignKeyValue}`)
 
   const attempts = res.data.results
@@ -80,6 +82,21 @@ const { data, loading, error } = useRequest(async () => {
           </n-card>
         </n-col>
       </n-row>
+      <n-card>
+        <Bar
+          id="my-chart-id"
+          class="max-h-64"
+          :options="{ responsive: true, scales: { y: { max: 100 } } }"
+          :data="{
+            labels: data.attempts.map((attempt: any) => attempt.quiz_information.quiz_title),
+            datasets: [
+              {
+                label: 'Score',
+                data: data.attempts.map((attempt: any) => Math.round(attempt.number_of_correct_answers / attempt.quiz_information.total_points * 100)),
+              }],
+          }"
+        />
+      </n-card>
       <table-base v-bind="{ columns, data: data.attempts }" />
     </n-space>
   </div>

@@ -31,7 +31,7 @@ const { data, loading, error, run } = useRequest(async () => {
   }
   const dashboard = await Promise.all([
     // axios.get('/getDashboardInfo'),
-    axios.get(auth.isSuperadmin ? '/getDashboardInfo' : `/getDashboardInfoByOrg/${auth.user?.organization_id}`),
+    axios.get(auth.isSuperadmin ? '/getDashboardInfo' : '/getDashBoardInfoByOrg'),
     axios.get('/getAllSetbacks'),
     axios.get(auth.isSuperadmin ? '/getQuizPassFail' : '/getQuizPassFailOrganization'),
     axios.get(auth.isSuperadmin ? '/quizScore' : '/quizScoreOrganization'),

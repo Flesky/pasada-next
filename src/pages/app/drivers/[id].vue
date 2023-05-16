@@ -43,9 +43,26 @@ const organizationHistoryColumns: DataTableColumn[] = [
     title: 'Date',
     key: 'created_at',
     sorter: 'default',
-    render(row) {
-      return String(row.created_at).slice(0, 10)
-    },
+    render: row => dayjs(row.created_at).format('MM/DD/YYYY'),
+  },
+]
+
+const vehicleHistoryColumns: DataTableColumn[] = [
+  {
+    title: 'Plate number',
+    key: 'vehicle_id.plate_number',
+    sorter: 'default',
+  },
+  {
+    title: 'Type',
+    key: 'vehicle_id.vehicle_type',
+    sorter: 'default',
+  },
+  {
+    title: 'Date',
+    key: 'created_at',
+    sorter: 'default',
+    render: row => dayjs(row.created_at).format('MM/DD/YYYY h:mm A'),
   },
 ]
 
@@ -56,23 +73,28 @@ const avatarURL = `${import.meta.env.VITE_BACKEND_URL}/api/fileUserImage/`
   <div v-if="loading">
     Loading...
   </div>
-  <div v-else-if="data" class="flex flex-col gap-3 xl:flex-row">
-    <n-card class="h-max shrink-0 xl:max-w-xs">
-      <div class="text-center">
-        <NAvatar
-          class="shrink-0" round
-          :src="`${avatarURL}${data.userManagement.user_image}`"
-          :size="100" fallback-src="/images/default.svg"
-        />
-        <n-h2 class="!mt-4 !mb-2">
-          {{ data.userManagement.fname }} {{ data.userManagement.lname }}
-        </n-h2>
-        <div>
-          {{ data.userManagement.organization.org_title }}
-          <TableFieldRole class="ml-1" :role_id="data.userManagement.role_id" />
+  <div v-else-if="data" class="flex flex-col gap-3">
+    <!--      xl:flex-row -->
+    <n-card class="h-max shrink-0 ">
+      <!--        xl:max-w-xs -->
+      <div class="flex flex-col text-center xl:flex-row">
+        <div class="flex flex-col items-center xl:flex-row">
+          <NAvatar
+            class="shrink-0" round
+            :src="`${avatarURL}${data.userManagement.user_image}`"
+            :size="100" fallback-src="/images/default.svg"
+          />
+          <div class="xl:!ml-4 xl:text-left">
+            <n-h2 class="!mt-4 !mb-2 xl:!my-0">
+              {{ data.userManagement.fname }} {{ data.userManagement.lname }}
+            </n-h2>
+            <div>
+              {{ data.userManagement.organization.org_title }}
+              <TableFieldRole class="ml-1" :role_id="data.userManagement.role_id" />
+            </div>
+          </div>
         </div>
-        <n-divider />
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-2 xl:ml-12 xl:flex-row xl:gap-12">
           <div class="flex items-center gap-2">
             <i-mail-outline />
             <a class="underline" :href="`mailto:${data.userManagement.email}`">
@@ -85,7 +107,7 @@ const avatarURL = `${import.meta.env.VITE_BACKEND_URL}/api/fileUserImage/`
           </div>
           <div class="flex items-center gap-2">
             <i-calendar-outline />
-            {{ data.userManagement.birthdate }}
+            {{ dayjs(data.userManagement.birthdate).format('MM/DD/YYYY') }}
           </div>
         </div>
       </div>
@@ -97,20 +119,24 @@ const avatarURL = `${import.meta.env.VITE_BACKEND_URL}/api/fileUserImage/`
           <drivers-information />
         </n-tab-pane>
         <template v-if="data.userManagement.role_id === 4">
-          <n-tab-pane display-directive="show:lazy" name="quiz" tab="Quiz attempts">
-            <QuizzesAttempts :foreign-key-value="id" />
+          <n-tab-pane display-directive="show:lazy" name="reminders" tab="Reminders">
+            <DriversReminders foreign-key="user_id" :foreign-key-value="id" />
           </n-tab-pane>
-          <!--          <n-tab-pane name="vehicles" tab="Vehicle history"> -->
-          <!--            <table-base v-bind="{ data: data.organizationHistory, columns: organizationHistoryColumns }" /> -->
-          <!--          </n-tab-pane> -->
-          <n-tab-pane name="organizations" tab="Organization history">
+          <n-tab-pane name="vehicles" tab="Vehicle History">
+            <table-base v-bind="{ data: data.vehicleHistory, columns: vehicleHistoryColumns }" />
+          </n-tab-pane>
+          <n-tab-pane name="organizations" tab="Organization History">
             <table-base v-bind="{ data: data.organizationHistory, columns: organizationHistoryColumns }" />
+          </n-tab-pane>
+          <n-tab-pane display-directive="show:lazy" name="quiz" tab="Quiz Attempts">
+            <QuizzesAttempts :foreign-key-value="id" />
           </n-tab-pane>
           <n-tab-pane display-directive="show:lazy" name="complaints" tab="Complaints">
             <Complaints
               :queries="{
                 all: 'complaint',
                 get: 'complaintByDriverID',
+                create: false,
               }" foreign-key="driver_id" :foreign-key-value="id"
             />
           </n-tab-pane>
@@ -119,6 +145,7 @@ const avatarURL = `${import.meta.env.VITE_BACKEND_URL}/api/fileUserImage/`
               :queries="{
                 all: 'violation',
                 get: 'violationByDriverID',
+                create: false,
               }" foreign-key="driver_id" :foreign-key-value="id"
             />
           </n-tab-pane>
@@ -127,6 +154,7 @@ const avatarURL = `${import.meta.env.VITE_BACKEND_URL}/api/fileUserImage/`
               :queries="{
                 all: 'accidents',
                 get: 'accidentByDriverID',
+                create: false,
               }" foreign-key="driver_id" :foreign-key-value="id"
             />
           </n-tab-pane>
