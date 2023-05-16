@@ -1,5 +1,6 @@
 <script setup lang="tsx">
 import type { DataTableColumns, FormRules } from 'naive-ui'
+import jsPDF from 'jspdf'
 import type { FormFields, Queries } from '@/types'
 import TableFieldUser from '@/components/table/field-user.vue'
 import formState from '@/utils/formState'
@@ -23,12 +24,12 @@ const columns: DataTableColumns = [
     title: 'Plate number',
     key: 'vehicles.plate_number',
     sorter(rowA: Record<string, any>, rowB: Record<string, any>) {
-      return rowA.vehicles.plate_number.localeCompare(rowB.vehicles.plate_number)
+      return String(rowA.vehicles.plate_number).localeCompare(String(rowB.vehicles.plate_number))
     },
   },
   {
-    title: 'Accident type',
-    key: 'accident_type',
+    title: 'Accident offense',
+    key: 'accident_offense',
     sorter: 'default',
   },
   {
@@ -274,8 +275,24 @@ const queries: Queries = {
   organization: 'accidentsOrganization',
   hasOrganizationField: true,
 }
+
+// Using jsPDF
+const generatePDF = (data) => {
+  const pdfData = data.flat().map(row => ({
+    'Driver': `${row.fname} ${row.lname}`,
+    'Accident': row.accident_offense || '-',
+    'Plate Number': row.plate_number || '-',
+  }))
+
+  const headers = ['Driver', 'Accident', 'Plate Number']
+
+  // eslint-disable-next-line new-cap
+  const doc = new jsPDF({ orientation: 'landscape' })
+  doc.table(1, 1, pdfData, headers, { autoSize: true })
+  doc.save('accidents.pdf')
+}
 </script>
 
 <template>
-  <table-crud v-bind="{ columns, fields, rules, queries, ...$attrs }" name="accident" />
+  <table-crud :pdf="generatePDF" v-bind="{ columns, fields, rules, queries, ...$attrs }" name="accident" />
 </template>

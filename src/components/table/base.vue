@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { DataTableColumns, PaginationProps } from 'naive-ui'
+import { NButton } from 'naive-ui'
 import SearchOutline from '~icons/ion/SearchOutline'
 const props = defineProps<{
   columns: DataTableColumns
   loading?: boolean
   data: object[]
+  pdf?: Function
 }>()
 
 const pagination: PaginationProps = {
@@ -38,14 +40,15 @@ const filteredData = computed(() => {
   <n-card title=" ">
     <template #header-extra>
       <n-space size="small" class="">
-        <n-input-group>
-          <n-input v-model:value="search" round placeholder="Type to search..." clearable>
-            <template #prefix>
-              <n-icon :component="SearchOutline" />
-            </template>
-          </n-input>
-          <slot name="actions" />
-        </n-input-group>
+        <n-input v-model:value="search" round placeholder="Type to search..." clearable>
+          <template #prefix>
+            <n-icon :component="SearchOutline" />
+          </template>
+        </n-input>
+        <NButton v-if="pdf" @click="pdf(data)">
+          Download PDF
+        </NButton>
+        <slot name="actions" />
       </n-space>
     </template>
 

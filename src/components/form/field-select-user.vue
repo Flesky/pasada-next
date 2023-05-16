@@ -65,6 +65,7 @@ const renderSingleSelectTag: SelectRenderTag = ({ option }) => {
         style: {
           marginRight: '12px',
         },
+        class: 'shrink-0',
       },
       {
         default: () => option.image ? undefined : (option.name as string || '').slice(0, 1).toUpperCase(),
@@ -88,6 +89,7 @@ const renderLabel: SelectRenderLabel = (option) => {
         fallbackSrc: '/images/default.svg',
         src: option.image as string,
         round: true,
+        class: 'shrink-0',
       }, {
         default: () => option.image ? undefined : (option.name as string).slice(0, 1).toUpperCase(),
       }),

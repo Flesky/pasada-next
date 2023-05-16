@@ -12,6 +12,7 @@ interface Props {
   fields: FormFields
   name: string
   queries: Queries
+  pdf?: Function
 
   // mode?: 'Add' | 'Edit'
   foreignKey?: string
@@ -174,7 +175,7 @@ const rules: FormRules = Object.entries(props.rules).reduce((acc, [key, value]) 
 
 <template>
   <div>
-    <table-base v-if="!error" :loading="loading" v-bind="{ columns, data }">
+    <table-base v-if="!error" :loading="loading" v-bind="{ columns, data, pdf }">
       <template #actions>
         <NButton v-if="queries.create !== false" round type="primary" @click="handleNew()">
           <template #icon>
