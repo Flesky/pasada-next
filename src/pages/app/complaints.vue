@@ -59,20 +59,14 @@ const fields: FormFields = {
     },
     format: vehicle => `${vehicle.plate_number} (${vehicle.manufacturer} ${vehicle.model_name})`,
   },
-  complaint_subject: {
-    type: 'autocomplete',
-    label: 'Subject',
-    placeholder: 'Enter subject (specify if others)',
-    options: [
-      'Contracting Passenger',
-      'Overcharging of Fare/Undercharging',
-      'Arrogant/Discourteous Driver',
-      'Hit and Run',
-      'Threatening Passenger',
-      'Reckless Driving',
-      'Discriminating Against Passenger',
-      'Refusal to Grant Senior/Student/PWD Discount',
-    ],
+  complaint_subject_id: {
+    type: 'select',
+    label: 'Complaint subject',
+    placeholder: 'Select subject...',
+    queries: {
+      all: 'complaintList',
+    },
+    format: complaint => `${complaint.complaint_subject}`,
   },
   complaint_description: {
     type: 'textarea',
@@ -122,7 +116,7 @@ const fields: FormFields = {
   complainant_contact_num: {
     type: 'number',
     label: 'Complainant contact number',
-    placeholder: 'e.g. "639123456789" | Leave blank if anonymous',
+    placeholder: 'e.g. "639123456789"',
     span: 12,
   },
   date_happened: {
@@ -148,7 +142,7 @@ const rules: FormRules = {
     type: 'any',
     required: true,
   },
-  complaint_subject: {
+  complaint_subject_id: {
     required: true,
   },
   complaint_description: {

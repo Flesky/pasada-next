@@ -88,10 +88,19 @@ const fields: FormFields = {
       },
     ],
   },
-  accident_offense: {
-    type: 'textarea',
-    label: 'Offense description',
-    placeholder: 'e.g. "Hit and run"',
+  // accident_offense: {
+  //   type: 'textarea',
+  //   label: 'Offense description',
+  //   placeholder: 'e.g. "Hit and run"',
+  // },
+  accident_offense_id: {
+    type: 'select',
+    label: 'Accident offense',
+    placeholder: 'Select offense...',
+    queries: {
+      all: 'accidentList',
+    },
+    format: accident => `${accident.accident_offense}`,
   },
   station_reported: {
     type: 'input',
@@ -205,8 +214,9 @@ const rules: FormRules = {
   accident_type: {
     required: true,
   },
-  accident_offense: {
+  accident_offense_id: {
     required: true,
+    type: 'number',
   },
   station_reported: {
     required: true,
