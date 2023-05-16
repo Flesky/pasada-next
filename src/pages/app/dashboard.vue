@@ -35,8 +35,8 @@ const { data, loading, error, run } = useRequest(async () => {
     axios.get('/getAllSetbacks'),
     axios.get(auth.isSuperadmin ? '/getQuizPassFail' : '/getQuizPassFailOrganization'),
     axios.get(auth.isSuperadmin ? '/quizScore' : '/quizScoreOrganization'),
-    ...graphQueries,
     axios.get(auth.isSuperadmin ? '/getRecentVehicles' : '/getRecentVehiclesOrg'),
+    ...graphQueries,
   ])
 
   const time = dayjs()
@@ -47,8 +47,6 @@ const { data, loading, error, run } = useRequest(async () => {
     greeting = 'Good morning'
   else if (hour >= 12 && hour < 18)
     greeting = 'Good afternoon'
-
-  console.log(dashboard)
 
   graphData.value = {
     complaints: dashboard[5].data.results,
@@ -171,12 +169,13 @@ const quizScoreColumns: DataTableColumns = [
 const recentVehiclesColumns: DataTableColumns = [
   {
     title: 'Vehicle',
-    key: 'vehicle_information.vehicle_plate_number',
+    key: 'a',
     sorter: 'default',
+    render: row => JSON.stringify(row),
   },
   {
     title: 'Driver',
-    key: 'driver_information.fname',
+    key: 'user',
     sorter(rowA, rowB) {
       return (`${rowA.fname} ${rowA.lname}`).localeCompare(`${rowB.fname} ${rowB.lname}`)
     },
@@ -225,6 +224,19 @@ const recentVehiclesColumns: DataTableColumns = [
       />
       <n-row gutter="8">
         <n-col :span="6">
+          <router-link to="/realtime">
+            <n-card>
+              <n-statistic label="Active vehicles" :value="data.dashboard['vehicles Assigned']">
+                <template #prefix>
+                  <n-icon>
+                    <i-car-outline />
+                  </n-icon>
+                </template>
+              </n-statistic>
+            </n-card>
+          </router-link>
+        </n-col>
+        <n-col :span="6">
           <router-link to="/lessons">
             <n-card class="test">
               <n-statistic label="Lessons" :value="data.dashboard.lessons">
@@ -263,19 +275,6 @@ const recentVehiclesColumns: DataTableColumns = [
             </n-card>
           </router-link>
         </n-col>
-        <n-col :span="6">
-          <router-link to="/vehicles">
-            <n-card>
-              <n-statistic label="Vehicles" :value="data.dashboard.vehicles">
-                <template #prefix>
-                  <n-icon>
-                    <i-car-outline />
-                  </n-icon>
-                </template>
-              </n-statistic>
-            </n-card>
-          </router-link>
-        </n-col>
       </n-row>
     </n-space>
 
@@ -287,9 +286,9 @@ const recentVehiclesColumns: DataTableColumns = [
       :data="data.quizScores" :columns="quizScoreColumns"
     />
 
-    <n-h2>Recently active vehicles</n-h2>
-    <table-base
-      :data="[]" :columns="recentVehiclesColumns"
-    />
+    <!--    <n-h2>Recently active vehicles</n-h2> -->
+    <!--    <table-base -->
+    <!--      :data="data.recentVehicles" :columns="recentVehiclesColumns" -->
+    <!--    /> -->
   </div>
 </template>

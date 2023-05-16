@@ -1,9 +1,11 @@
 <script setup lang="tsx">
 import type { DataTableColumns, FormRules } from 'naive-ui'
 import jsPDF from 'jspdf'
+import banner from '/images/banner.png'
 import type { FormFields, Queries } from '@/types'
 import TableFieldUser from '@/components/table/field-user.vue'
 import formState from '@/utils/formState'
+import { useAuth } from '@/utils/auth'
 
 definePage({
   name: 'Accidents',
@@ -277,18 +279,23 @@ const queries: Queries = {
 }
 
 // Using jsPDF
+const auth = useAuth()
 const generatePDF = (data) => {
   const pdfData = data.flat().map(row => ({
+    ...(auth.isSuperadmin ? { Organization: row.org_title } : {}),
     'Driver': `${row.fname} ${row.lname}`,
     'Accident': row.accident_offense || '-',
     'Plate Number': row.plate_number || '-',
+    'Date': dayjs(row.date_committed).format('MM/DD/YYYY'),
   }))
 
-  const headers = ['Driver', 'Accident', 'Plate Number']
+  const headers = [...(auth.isSuperadmin ? ['Organization'] : []), 'Driver', 'Accident', 'Plate Number', 'Date']
 
   // eslint-disable-next-line new-cap
   const doc = new jsPDF({ orientation: 'landscape' })
-  doc.table(1, 1, pdfData, headers, { autoSize: true })
+  doc.addImage(banner, 'PNG', 4, 4, 100, 12)
+  doc.text(`Accidents: ${auth.isSuperadmin ? 'All organizations' : auth.user.organization.org_title}`, 4, 24)
+  doc.table(4, 30, pdfData, headers, { autoSize: true })
   doc.save('accidents.pdf')
 }
 </script>

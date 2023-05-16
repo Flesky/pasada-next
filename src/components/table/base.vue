@@ -25,6 +25,7 @@ const filteredData = computed(() => {
     return props.data
   return props.data.filter((row) => {
     // Convert object values to string recursively
+    delete row.mname
     const values = Object.values(row).map((value) => {
       if (typeof value === 'object' && value)
         return Object.values(value).join(' ')
@@ -45,7 +46,10 @@ const filteredData = computed(() => {
             <n-icon :component="SearchOutline" />
           </template>
         </n-input>
-        <NButton v-if="pdf" @click="pdf(data)">
+        <NButton v-if="pdf && filteredData.length" round @click="pdf(filteredData)">
+          <template #icon>
+            <i-download-outline />
+          </template>
           Download PDF
         </NButton>
         <slot name="actions" />

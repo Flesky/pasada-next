@@ -1,8 +1,10 @@
 <script setup lang="tsx">
 import type { DataTableColumns, FormRules } from 'naive-ui'
+import jsPDF from 'jspdf'
 import type { FormFields, Queries } from '@/types'
 import TableFieldUser from '@/components/table/field-user.vue'
 import formState from '@/utils/formState'
+import { useAuth } from '@/utils/auth'
 
 definePage({
   name: 'Complaints',
@@ -175,8 +177,29 @@ const queries: Queries = {
   organization: 'complaintOrganization',
   hasOrganizationField: true,
 }
+
+// Using jsPDF
+const auth = useAuth()
+const generatePDF = (data) => {
+  const pdfData = data.flat().map(row => ({
+    ...(auth.isSuperadmin ? { Organization: row.org_title } : {}),
+    'Driver': `${row.fname} ${row.lname}`,
+    'Complaint': row.complaint_subject || '-',
+    'Plate Number': row.plate_number || '-',
+    'Date': dayjs(row.date_committed).format('MM/DD/YYYY'),
+  }))
+
+  const headers = [...(auth.isSuperadmin ? ['Organization'] : []), 'Driver', 'Complaint', 'Plate Number', 'Date']
+
+  // eslint-disable-next-line new-cap
+  const doc = new jsPDF({ orientation: 'landscape' })
+  doc.addImage('images/banner.png', 'PNG', 4, 4, 100, 12)
+  doc.text(`Complaints: ${auth.isSuperadmin ? 'All organizations' : auth.user.organization.org_title}`, 4, 24)
+  doc.table(4, 30, pdfData, headers, { autoSize: true })
+  doc.save('complaints.pdf')
+}
 </script>
 
 <template>
-  <table-crud v-bind="{ columns, fields, rules, queries, ...$attrs }" name="complaint" />
+  <table-crud :pdf="generatePDF" v-bind="{ columns, fields, rules, queries, ...$attrs }" name="complaint" />
 </template>
