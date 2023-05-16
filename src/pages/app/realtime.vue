@@ -159,7 +159,7 @@ function handlePost(id) {
   <template v-if="data">
     <n-card>
       <n-tabs size="large" type="line">
-        <n-tab-pane tab="Active Vehicles" name="active">
+        <n-tab-pane tab="Assigned Vehicles" name="active">
           <table-base v-bind="{ data: data.active, columns: activeColumns, loading }" />
         </n-tab-pane>
         <n-tab-pane tab="Inactive Vehicles" name="inactive">
