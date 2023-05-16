@@ -42,7 +42,7 @@ const filteredData = computed(() => {
   }
 })
 
-watch(filteredData, () => {
+watch(() => formState.value.organization_id, () => {
   if (auth.isSuperadmin)
     model.value = null
 })
