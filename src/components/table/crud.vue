@@ -187,7 +187,7 @@ const rules: FormRules = Object.entries(props.rules).reduce((acc, [key, value]) 
 
 <template>
   <div>
-    <table-base v-if="!error" :columns="orgColumn" v-bind="{ columns, loading, data: filteredByOrganization, pdf }">
+    <table-base v-if="!error" v-bind="{ columns, loading, data: filteredByOrganization, pdf, ...$attrs }">
       <template v-if="auth.isSuperadmin && props.queries.organization && props.queries.hasOrganizationField !== false" #header>
         <n-select v-model:value="selectedOrg" class="max-w-xs" clearable placeholder="Filter by organization" :options="organizations" />
       </template>
