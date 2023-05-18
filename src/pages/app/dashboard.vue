@@ -35,7 +35,7 @@ const { data, loading, error, run } = useRequest(async () => {
     axios.get('/getAllSetbacks'),
     axios.get(auth.isSuperadmin ? '/getQuizPassFail' : '/getQuizPassFailOrganization'),
     axios.get(auth.isSuperadmin ? '/quizScore' : '/quizScoreOrganization'),
-    axios.get(auth.isSuperadmin ? '/getRecentVehicles' : '/getRecentVehiclesOrg'),
+    axios.get(auth.isSuperadmin ? '/notification' : '/notificationOrganization'),
     ...graphQueries,
   ])
 
@@ -61,7 +61,7 @@ const { data, loading, error, run } = useRequest(async () => {
     setbacks: dashboard[1].data.results,
     passingRate: dashboard[2].data.results,
     quizScores: dashboard[3].data.results,
-    recentVehicles: dashboard[4].data.results,
+    notifications: dashboard[4].data.results,
   }
 })
 const { isPending, start, stop } = useTimeoutFn(() => {
@@ -166,30 +166,21 @@ const quizScoreColumns: DataTableColumns = [
   },
 ]
 
-const recentVehiclesColumns: DataTableColumns = [
+const notificationsColumns: DataTableColumns = [
   {
-    title: 'Vehicle',
-    key: 'a',
+    title: 'Message',
+    key: 'message',
     sorter: 'default',
-    render: row => JSON.stringify(row),
+    render: row => <>
+          <n-h3 class="!mb-2">{row.title}</n-h3>
+          <div>{row.message}</div>
+        </>,
   },
   {
-    title: 'Driver',
-    key: 'user',
-    sorter(rowA, rowB) {
-      return (`${rowA.fname} ${rowA.lname}`).localeCompare(`${rowB.fname} ${rowB.lname}`)
-    },
-    render(row) {
-      return <TableFieldUser id={row.user.id} fname={row.user.fname} lname={row.user.lname} user_image={row.user.user_image}></TableFieldUser>
-    },
-  },
-  {
-    title: 'Date',
+    title: 'Date issued',
     key: 'created_at',
     sorter: 'default',
-    render(row) {
-      return (row.created_at as string).slice(0, 10)
-    },
+    render: row => dayjs(row.created_at).format('MM/DD/YYYY h:mm A'),
   },
 ]
 </script>
@@ -278,6 +269,11 @@ const recentVehiclesColumns: DataTableColumns = [
       </n-row>
     </n-space>
 
+    <n-h2>Notifications</n-h2>
+    <table-base
+      :data="data.notifications" :columns="notificationsColumns"
+    />
+
     <n-h2>Driver worthiness</n-h2>
     <table-base :data="data.setbacks" :columns="setbacksColumns" />
 
@@ -285,10 +281,5 @@ const recentVehiclesColumns: DataTableColumns = [
     <table-base
       :data="data.quizScores" :columns="quizScoreColumns"
     />
-
-    <!--    <n-h2>Recently active vehicles</n-h2> -->
-    <!--    <table-base -->
-    <!--      :data="data.recentVehicles" :columns="recentVehiclesColumns" -->
-    <!--    /> -->
   </div>
 </template>

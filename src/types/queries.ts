@@ -3,7 +3,7 @@ export interface Queries {
   get?: string
   organization?: string
   hasOrganizationField?: boolean
-  create?: false
+  create?: string | false
   edit?: false
   delete?: string | false
 }

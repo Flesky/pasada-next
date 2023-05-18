@@ -42,6 +42,7 @@ const rules: FormRules = {
 const queries: Queries = {
   all: 'remindDriver',
   get: 'getRemindDriverByUserID',
+  create: 'Create reminder',
 }
 </script>
 

@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import type { DataTableColumns, FormRules } from 'naive-ui'
-import { NButton, NText } from 'naive-ui'
+import { NButton } from 'naive-ui'
 import type { FormFields, Queries } from '@/types'
 import TableFieldUser from '@/components/table/field-user.vue'
 import formState from '@/utils/formState'
@@ -15,17 +15,20 @@ const attachments = reactive({
   title: '',
 })
 
+const attrs = useAttrs()
 const columns: DataTableColumns = [
-  {
-    title: 'Driver',
-    key: 'name',
-    render(row) {
-      return <TableFieldUser id={row.driver_id} fname={row.fname} lname={row.lname} user_image={row.user_image}></TableFieldUser>
-    },
-    sorter(rowA, rowB) {
-      return (`${rowA.fname} ${rowA.lname}`).localeCompare(`${rowB.fname} ${rowB.lname}`)
-    },
-  },
+  ...attrs.foreignKey
+    ? []
+    : [{
+        title: 'Driver',
+        key: 'name',
+        render(row) {
+          return <TableFieldUser id={row.driver_id} fname={row.fname} lname={row.lname} user_image={row.user_image}></TableFieldUser>
+        },
+        sorter(rowA, rowB) {
+          return (`${rowA.fname} ${rowA.lname}`).localeCompare(`${rowB.fname} ${rowB.lname}`)
+        },
+      }],
   {
     title: 'Plate number',
     key: 'plate_number',
@@ -33,11 +36,11 @@ const columns: DataTableColumns = [
   },
   {
     title: 'Violation',
-    key: 'violation_list.violation_code',
-    sorter: (a: any, b: any) => a.violation_list.violation_code - b.violation_list.violation_code,
+    key: 'violation_list',
+    sorter: (a: any, b: any) => a.violation_code - b.violation_code,
     render(row: Record<string, any>) {
-      return <p>{row.violation_list.violation_code} - {row.violation_list.violation_description}<br/>
-        <NText depth={3}>{{ 1: 'First', 2: 'Second', 3: 'Third' }[row.offense_level as number]} Offense - {row.violation_list[`${{ 1: 'first', 2: 'second', 3: 'third' }[row.offense_level as number]}_offense_charge`]} PhP</NText></p>
+      return <p>{row.violation_code} - {row.violation_description}<br/>
+        <NText depth={3}>{{ 1: 'First', 2: 'Second', 3: 'Third' }[row.offense_level as number]} Offense - {row[`${{ 1: 'first', 2: 'second', 3: 'third' }[row.offense_level as number]}_offense_charge`]} PhP</NText></p>
     },
   },
   {

@@ -94,6 +94,7 @@ const activeColumns: DataTableColumns = [
   },
 ]
 
+const now = dayjs()
 const inactiveColumns: DataTableColumns = [
   ...isSuperadmin
     ? [{
@@ -109,6 +110,19 @@ const inactiveColumns: DataTableColumns = [
     title: 'Type',
     key: 'vehicle_type',
     sorter: 'default',
+  },
+  {
+    title: 'Date assigned',
+    key: 'date_assigned',
+    sorter: 'default',
+    render: (row) => {
+      const date = dayjs(row.assigned_at || row.created_at)
+
+      const day = now.diff(date, 'day') ? date.format('MM/DD/YYYY') : 'Today'
+      console.log(now.diff(date, 'day'))
+
+      return day + dayjs(row.assigned_at || row.created_at).format(' h:mm A')
+    },
   },
   {
     key: 'assign',

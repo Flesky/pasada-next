@@ -38,7 +38,11 @@ const filteredData = computed(() => {
 </script>
 
 <template>
-  <n-card title=" ">
+  <n-card>
+    <template #header>
+      <slot name="header" />
+      <div />
+    </template>
     <template #header-extra>
       <n-space size="small" class="">
         <n-input v-model:value="search" round placeholder="Type to search..." clearable>

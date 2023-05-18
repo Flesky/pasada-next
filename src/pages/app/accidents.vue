@@ -11,17 +11,20 @@ definePage({
   name: 'Accidents',
 })
 
+const attrs = useAttrs()
 const columns: DataTableColumns = [
-  {
-    title: 'Driver',
-    key: 'name',
-    render(row) {
-      return <TableFieldUser id={row.driver_id} fname={row.fname} lname={row.lname} user_image={row.user_image}></TableFieldUser>
-    },
-    sorter(rowA, rowB) {
-      return (`${rowA.fname} ${rowA.lname}`).localeCompare(`${rowB.fname} ${rowB.lname}`)
-    },
-  },
+  ...attrs.foreignKey
+    ? []
+    : [{
+        title: 'Driver',
+        key: 'name',
+        render(row) {
+          return <TableFieldUser id={row.driver_id} fname={row.fname} lname={row.lname} user_image={row.user_image}></TableFieldUser>
+        },
+        sorter(rowA, rowB) {
+          return (`${rowA.fname} ${rowA.lname}`).localeCompare(`${rowB.fname} ${rowB.lname}`)
+        },
+      }],
   {
     title: 'Plate number',
     key: 'plate_number',

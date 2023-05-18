@@ -40,10 +40,20 @@ const organizationHistoryColumns: DataTableColumn[] = [
     sorter: 'default',
   },
   {
-    title: 'Date',
-    key: 'created_at',
+    title: 'Assigned by',
+    key: 'assigned_by',
     sorter: 'default',
-    render: row => dayjs(row.created_at).format('MM/DD/YYYY'),
+    render: row => `${row.assigned_by.fname} ${row.assigned_by.lname}`,
+  },
+  {
+    title: 'Date',
+    key: 'date',
+    sorter: 'default',
+    render: (row) => {
+      const assigned_at = dayjs(row.assigned_at || row.created_at).format('MM/DD/YYYY h:mm A')
+      const unassigned_at = row.unassigned_at ? dayjs(row.unassigned_at).format(' - MM/DD/YYYY h:mm A') : ' '
+      return assigned_at + unassigned_at
+    },
   },
 ]
 
@@ -60,9 +70,13 @@ const vehicleHistoryColumns: DataTableColumn[] = [
   },
   {
     title: 'Date',
-    key: 'created_at',
+    key: 'date',
     sorter: 'default',
-    render: row => dayjs(row.created_at).format('MM/DD/YYYY h:mm A'),
+    render: (row) => {
+      const assigned_at = dayjs(row.assigned_at || row.created_at).format('MM/DD/YYYY h:mm A')
+      const unassigned_at = row.unassigned_at ? dayjs(row.unassigned_at).format(' - MM/DD/YYYY h:mm A') : ' '
+      return assigned_at + unassigned_at
+    },
   },
 ]
 

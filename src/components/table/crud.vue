@@ -30,6 +30,9 @@ const modal = reactive({
   mode: '',
 })
 
+const organizations = ref()
+const selectedOrg = ref()
+
 // GET method
 const { data, error, loading, run: refresh } = useRequest(
   async () => {
@@ -47,7 +50,14 @@ const { data, error, loading, run: refresh } = useRequest(
       query = 'getAllUsersOrganization'
 
     const res = await axios.get(`/${query}`)
-    return res.data.results
+    const results = res.data.results
+    organizations.value = Array.from(new Set(results.map((row: any) => row.organization_id)))
+      .map((id) => {
+        const row = results.find((row: any) => row.organization_id === id)
+        return { label: row?.org_title || row?.organization?.org_title, value: id }
+      }).sort((a, b) => a.label.localeCompare(b.label))
+
+    return results
   }, { initialData: [] },
 )
 
@@ -140,22 +150,18 @@ const columns: DataTableColumns = [
   },
 ]
 if (auth.isSuperadmin && props.queries.organization && props.queries.hasOrganizationField !== false) {
-  columns.unshift(
-    {
-      title: 'Org.',
-      key: 'org',
-      sorter: (a: any, b: any) => {
-        return a?.org_title?.localeCompare(b?.org_title)
+  columns.unshift({
+    title: 'Organization',
+    key: 'org',
+    sorter: (a: any, b: any) => a?.org_title?.localeCompare(b?.org_title)
             || a?.organization?.org_title?.localeCompare(b?.organization?.org_title)
-            || a?.organization_id - b?.organization_id || 0
-      },
-      render(row: any) {
-        return row?.org_title
+            || a?.organization_id - b?.organization_id || 0,
+    render: row => row.org_title
             || row?.organization?.org_title
             || row?.organization_id
-            || ''
-      },
-    })
+            || '',
+    // filter: (org, row) => org === row.organization_id,
+  })
 }
 
 function handleNew() {
@@ -168,6 +174,12 @@ function handleNew() {
     formState.value[props.foreignKey] = props.foreignKeyValue
 }
 
+const filteredByOrganization = computed(() => {
+  if (!selectedOrg.value)
+    return data.value
+  return data.value.filter((row: any) => row.organization_id === selectedOrg.value)
+})
+
 const rules: FormRules = Object.entries(props.rules).reduce((acc, [key, value]) => {
   return { ...acc, [key]: { ...value, trigger: ['input', 'blur'] } }
 }, {})
@@ -175,13 +187,16 @@ const rules: FormRules = Object.entries(props.rules).reduce((acc, [key, value]) 
 
 <template>
   <div>
-    <table-base v-if="!error" :loading="loading" v-bind="{ columns, data, pdf }">
+    <table-base v-if="!error" :columns="orgColumn" v-bind="{ columns, loading, data: filteredByOrganization, pdf }">
+      <template v-if="auth.isSuperadmin && props.queries.organization && props.queries.hasOrganizationField !== false" #header>
+        <n-select v-model:value="selectedOrg" class="max-w-xs" clearable placeholder="Filter by organization" :options="organizations" />
+      </template>
       <template #actions>
         <NButton v-if="queries.create !== false" round type="primary" @click="handleNew()">
           <template #icon>
             <i-plus />
           </template>
-          Add {{ name }}
+          {{ queries?.create || 'Add' }} {{ name }}
         </NButton>
       </template>
     </table-base>

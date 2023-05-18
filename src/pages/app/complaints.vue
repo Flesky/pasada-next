@@ -10,17 +10,20 @@ definePage({
   name: 'Complaints',
 })
 
+const attrs = useAttrs()
 const columns: DataTableColumns = [
-  {
-    title: 'Driver',
-    key: 'name',
-    render(row) {
-      return <TableFieldUser id={row.driver_id} fname={row.fname} lname={row.lname} user_image={row.user_image}></TableFieldUser>
-    },
-    sorter(rowA, rowB) {
-      return (`${rowA.fname} ${rowA.lname}`).localeCompare(`${rowB.fname} ${rowB.lname}`)
-    },
-  },
+  ...attrs.foreignKey
+    ? []
+    : [{
+        title: 'Driver',
+        key: 'name',
+        render(row) {
+          return <TableFieldUser id={row.driver_id} fname={row.fname} lname={row.lname} user_image={row.user_image}></TableFieldUser>
+        },
+        sorter(rowA, rowB) {
+          return (`${rowA.fname} ${rowA.lname}`).localeCompare(`${rowB.fname} ${rowB.lname}`)
+        },
+      }],
   {
     title: 'Plate number',
     key: 'plate_number',
@@ -195,40 +198,38 @@ const generatePDF = (data) => {
   const dateRetrieved = dayjs().format('MM/DD/YYYY')
   const timeRetrieved = dayjs().format('MM/DD/YYYY h:mm A')
 
-
   // eslint-disable-next-line new-cap
   const doc = new jsPDF({ orientation: 'landscape' })
-  doc.addImage('images/banner.png', 'PNG', 75, 25, 150, 18,  )
+  doc.addImage('images/banner.png', 'PNG', 75, 25, 150, 18)
   doc.setFontSize(11).setTextColor('#3D53A4')
-  doc.text("P.U.V.'s Pattern and Attitude on the Streets Using Artificial Intelligence and Data Analytics", 150, 50, null, null, 'center' )
+  doc.text('P.U.V.\'s Pattern and Attitude on the Streets Using Artificial Intelligence and Data Analytics', 150, 50, null, null, 'center')
 
   doc.setFont('helvetica', 'bold').setFontSize(36)
-  doc.text(`COMPILATION OF COMPLAINTS`, 150, 100, null, null, 'center')
+  doc.text('COMPILATION OF COMPLAINTS', 150, 100, null, null, 'center')
 
   doc.setFont('helvetica', 'normal').setFontSize(20)
   doc.text(` ${auth.isSuperadmin ? 'All Organizations' : auth.user.organization.org_title}`, 150, 120, null, null, 'center')
 
   doc.setFontSize(16)
-  doc.text(dateAcquisition,150, 190, null, null, 'center')
+  doc.text(dateAcquisition, 150, 190, null, null, 'center')
 
   doc.addPage().setFontSize(9).setTextColor('black')
   doc.addImage('images/banner.png', 'PNG', 10, 8, 100, 12)
   doc.table(10, 25, pdfData, headers,
-      { printHeaders:true, autoSize:true, fontSize:10, margins: {top: 25, right: 20, bottom: 9, left: 14}
-  })
+    { printHeaders: true, autoSize: true, fontSize: 10, margins: { top: 25, right: 20, bottom: 9, left: 14 } })
 
-  //iterating page number and time of generation
+  // iterating page number and time of generation
   let currentPage = 1
-  let limitPage = doc.getNumberOfPages()
+  const limitPage = doc.getNumberOfPages()
   let foo
-  for (currentPage; currentPage < limitPage; currentPage++){
+  for (currentPage; currentPage < limitPage; currentPage++) {
     foo = currentPage + 1
     doc.setPage(foo)
     doc.addImage('images/banner.png', 'PNG', 10, 8, 100, 12)
-    doc.text("Page " + foo + " of " + limitPage, 285, 202, null, null, "right")
-    doc.text("Generated on: " + timeRetrieved, 10, 202)
+    doc.text(`Page ${foo} of ${limitPage}`, 285, 202, null, null, 'right')
+    doc.text(`Generated on: ${timeRetrieved}`, 10, 202)
   }
-  doc.save('Complaints ' +  dateRetrieved + '.pdf')
+  doc.save(`Complaints ${dateRetrieved}.pdf`)
 }
 </script>
 
