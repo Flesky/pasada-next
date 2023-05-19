@@ -1,11 +1,11 @@
 <script setup lang="tsx">
 import type { DataTableColumns, FormRules } from 'naive-ui'
-import jsPDF from 'jspdf'
 import type { FormFields, Queries } from '@/types'
 import TableFieldUser from '@/components/table/field-user.vue'
 import formState from '@/utils/formState'
+import jsPDF from 'jspdf'
+import 'jspdf-autotable'
 import { useAuth } from '@/utils/auth'
-
 definePage({
   name: 'Complaints',
 })
@@ -212,6 +212,8 @@ const generatePDF = (data) => {
 
   doc.setFontSize(16)
   doc.text(dateAcquisition, 150, 190, null, null, 'center')
+
+  doc.setFont('helvetica', 'normal').setFontSize(9)
 
   doc.addPage().setFontSize(9).setTextColor('black')
   doc.addImage('images/banner.png', 'PNG', 10, 8, 100, 12)
