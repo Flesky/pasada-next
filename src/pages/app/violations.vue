@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+import {useAuth} from "@/utils/auth";
+import jsPDF from "jspdf";
 import type { DataTableColumns, FormRules } from 'naive-ui'
 import { NButton } from 'naive-ui'
 import type { FormFields, Queries } from '@/types'
@@ -189,10 +191,61 @@ const queries: Queries = {
   organization: 'violationsOrganizations',
   hasOrganizationField: true,
 }
+
+// Using jsPDF
+const auth = useAuth()
+const generatePDF = (data) => {
+  const pdfData = data.flat().map(row => ({
+    ...(auth.isSuperadmin ? { Organization: row.org_title } : {}),
+    'Driver': `${row.fname} ${row.lname}`,
+    // 'Violations': row.violation_code || '-',
+    'Plate Number': row.plate_number || '-',
+    'Date': dayjs(row.date_committed).format('MM/DD/YYYY'),
+  }))
+
+  const headers = [...(auth.isSuperadmin ? ['Organization'] : []), 'Driver', 'Plate Number', 'Date']
+  const dateAcquisition = dayjs().format('MMMM DD, YYYY')
+  const dateRetrieved = dayjs().format('MM/DD/YYYY')
+  const timeRetrieved = dayjs().format('MM/DD/YYYY h:mm A')
+
+  // eslint-disable-next-line new-cap
+  const doc = new jsPDF({ orientation: 'landscape' })
+  doc.addImage('images/banner.png', 'PNG', 75, 25, 150, 18,  )
+  doc.setFontSize(11).setTextColor('#3D53A4')
+  doc.text("P.U.V.'s Pattern and Attitude on the Streets Using Artificial Intelligence and Data Analytics", 150, 50, null, null, 'center' )
+
+  doc.setFont('helvetica', 'bold').setFontSize(36)
+  doc.text(`COMPILATION OF VIOLATIONS`, 150, 100, null, null, 'center')
+
+  doc.setFont('helvetica', 'normal').setFontSize(20)
+  doc.text(` ${auth.isSuperadmin ? 'All Organizations' : auth.user.organization.org_title}`, 150, 120, null, null, 'center')
+
+  doc.setFontSize(16)
+  doc.text(dateAcquisition,150, 190, null, null, 'center')
+
+  doc.addPage().setFontSize(9).setTextColor('black')
+  doc.addImage('images/banner.png', 'PNG', 10, 8, 100, 12)
+  doc.table(10, 25, pdfData, headers,
+      { printHeaders:true, autoSize:true, fontSize:10, margins: {top: 25, right: 20, bottom: 9, left: 14}
+      })
+
+  //iterating page number and time of generation
+  let currentPage = 1
+  let limitPage = doc.getNumberOfPages()
+  let foo
+  for (currentPage; currentPage < limitPage; currentPage++){
+    foo = currentPage + 1
+    doc.setPage(foo)
+    doc.addImage('images/banner.png', 'PNG', 10, 8, 100, 12)
+    doc.text("Page " + foo + " of " + limitPage, 285, 202, null, null, "right")
+    doc.text("Generated on: " + timeRetrieved, 10, 202)
+  }
+  doc.save('Violations ' +  dateRetrieved + '.pdf')
+}
 </script>
 
 <template>
-  <table-crud v-bind="{ columns, fields, rules, queries, ...$attrs }" name="violation" />
+  <table-crud :pdf="generatePDF" v-bind="{ columns, fields, rules, queries, ...$attrs }" name="violation" />
 
   <app-modal v-model:show="attachments.show" :title="`Attachments: ${attachments.title}`">
     <violations-attachments :foreign-key-value="attachments.foreignKeyValue" />
