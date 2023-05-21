@@ -8,7 +8,7 @@ const src = computed(() => `${import.meta.env.VITE_BACKEND_URL}/api/${props.path
 </script>
 
 <template>
-  <n-image :src="name ? src : undefined" object-fit="contain" class="h-10">
+  <n-image :src="name ? src : undefined" object-fit="cover" class="w-16">
     <template #placeholder />
   </n-image>
 </template>

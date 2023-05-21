@@ -13,7 +13,7 @@ definePage({
 
 const attrs = useAttrs()
 const columns: DataTableColumns = [
-  ...attrs.foreignKey
+  ...attrs['foreign-key']
     ? []
     : [{
         title: 'Driver',
@@ -28,9 +28,7 @@ const columns: DataTableColumns = [
   {
     title: 'Plate number',
     key: 'plate_number',
-    sorter(rowA: Record<string, any>, rowB: Record<string, any>) {
-      return String(rowA.vehicles.plate_number).localeCompare(String(rowB.vehicles.plate_number))
-    },
+    sorter: 'default',
   },
   {
     title: 'Accident offense',

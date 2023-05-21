@@ -55,7 +55,7 @@ const { data, error, loading, run: refresh } = useRequest(
       .map((id) => {
         const row = results.find((row: any) => row.organization_id === id)
         return { label: row?.org_title || row?.organization?.org_title, value: id }
-      }).sort((a, b) => a.label.localeCompare(b.label))
+      }).sort((a, b) => String(a.label).localeCompare(String(b.label)))
 
     return results
   }, { initialData: [] },

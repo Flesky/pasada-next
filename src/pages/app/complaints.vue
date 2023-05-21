@@ -12,7 +12,7 @@ definePage({
 
 const attrs = useAttrs()
 const columns: DataTableColumns = [
-  ...attrs.foreignKey
+  ...attrs['foreign-key']
     ? []
     : [{
         title: 'Driver',

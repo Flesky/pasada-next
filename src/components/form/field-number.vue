@@ -9,7 +9,7 @@ const model = useVModel(props, 'value', emit)
 </script>
 
 <template>
-  <n-input-number v-model:value="model" v-bind="{ placeholder }" clearable :show-button="false">
+  <n-input-number v-model:value="model" v-bind="{ placeholder }" :show-button="false">
     <template #suffix>
       {{ suffix }}
     </template>

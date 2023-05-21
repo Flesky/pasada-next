@@ -13,9 +13,12 @@ axios.interceptors.response.use(
       case 400:
       case 422: {
         const { data } = error.response
-        Object.values(data?.errors || data).forEach((errorMessage) => {
-          message.error(errorMessage[0] as Array<string>)
-        })
+        if (Array.isArray(data?.errors) || Array.isArray(data)) {
+          Object.values(data?.errors || data).forEach((errorMessage) => {
+            message.error(errorMessage[0] as Array<string>)
+          })
+        }
+        else { message.error(data.message) }
         break
       }
       case 401:
