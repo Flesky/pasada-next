@@ -177,7 +177,7 @@ const healthFields: FormFields = {
           'Allergies',
           'Asthma',
           'Diabetes',
-          'Heart Disease',
+          // 'Heart Disease',
           'High Blood Pressure',
           'Ulcer/GERD',
         ].map(label => ({
