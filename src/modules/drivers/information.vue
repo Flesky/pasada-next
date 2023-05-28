@@ -179,7 +179,8 @@ const healthFields: FormFields = {
           'Diabetes',
           // 'Heart Disease',
           'High Blood Pressure',
-          'Ulcer/GERD',
+          'Ulcer',
+          'Gastroesophageal reflux disease (Acid Reflux)',
         ].map(label => ({
           label,
           value: label,
