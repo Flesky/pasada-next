@@ -155,12 +155,35 @@ const healthFields: FormFields = {
         value: 'Healthy',
       },
       {
+        type: 'group',
         label: 'With disability',
-        value: 'With disability',
+        key: 'With disability',
+        children: [
+          'Color Blindness',
+          'Impaired hearing',
+          'Impairment of upper limb / lower limb',
+          'Partially/Totally blind in one eye',
+          'Vision impairment',
+        ].map(label => ({
+          label,
+          value: label,
+        })),
       },
       {
+        type: 'group',
         label: 'With illness',
-        value: 'With illness',
+        key: 'With illness',
+        children: [
+          'Allergies',
+          'Asthma',
+          'Diabetes',
+          'Heart Disease',
+          'High Blood Pressure',
+          'Ulcer/GERD',
+        ].map(label => ({
+          label,
+          value: label,
+        })),
       },
     ],
     span: 12,
