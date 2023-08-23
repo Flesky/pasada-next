@@ -275,7 +275,7 @@ const notificationsColumns: DataTableColumns = [
     />
 
     <n-h2>Driver worthiness</n-h2>
-    <table-base :row-class-name="(row) => +row.total_points <= 80 ? '!bg-red-300' : undefined" :data="data.setbacks" :columns="setbacksColumns" />
+    <table-base :row-class-name="(row) => +row.total_points < 80 ? '!bg-red-300' : undefined" :data="data.setbacks" :columns="setbacksColumns" />
 
     <n-h2>Recent quiz scores</n-h2>
     <table-base
